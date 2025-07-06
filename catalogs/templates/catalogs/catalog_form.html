@@ -1,0 +1,60 @@
+{% extends 'catalogs/base.html' %}
+
+{% block title %}{{ action }} Catálogo - Cataly{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mt-5">
+                <div class="card-body p-5">
+                    <h2 class="fw-bold mb-4 text-center">
+                        {% if action == 'Crear' %}
+                            <i class="fas fa-plus me-2"></i>Crear Catálogo
+                        {% else %}
+                            <i class="fas fa-edit me-2"></i>Editar Catálogo
+                        {% endif %}
+                    </h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label fw-bold">Título</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.title.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label fw-bold">Descripción</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.description.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-check mb-4">
+                            {{ form.is_public }}
+                            <label class="form-check-label" for="id_is_public">Catálogo público</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            {% if action == 'Crear' %}
+                                <i class="fas fa-plus me-2"></i>Crear
+                            {% else %}
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            {% endif %}
+                        </button>
+                    </form>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'catalogs:my_catalogs' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Volver a Mis Catálogos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

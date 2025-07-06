@@ -1,0 +1,167 @@
+{% extends 'catalogs/base.html' %}
+
+{% block title %}Mis Catálogos - Cataly{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="fas fa-user me-3"></i>Mis Catálogos
+        </h1>
+        <p class="lead mb-4">Gestiona y organiza tus catálogos personales</p>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number">{{ total_catalogs }}</div>
+                    <p class="text-muted mb-0">Total de Catálogos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create New Catalog -->
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{% url 'catalogs:catalog_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Crear Nuevo Catálogo
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Catalogs Section -->
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">
+                <i class="fas fa-book-open me-2"></i>Tus Catálogos
+            </h2>
+            <p class="text-muted">Todos los catálogos que has creado</p>
+        </div>
+    </div>
+
+    {% if user_catalogs %}
+    <div class="row">
+        {% for catalog in user_catalogs %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title fw-bold">{{ catalog.title }}</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'catalogs:catalog_update' catalog.uuid %}">
+                                    <i class="fas fa-edit me-2"></i>Editar
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'catalogs:catalog_delete' catalog.uuid %}">
+                                    <i class="fas fa-trash me-2"></i>Eliminar
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <p class="card-text text-muted">
+                        {% if catalog.description %}
+                            {{ catalog.description|truncatewords:20 }}
+                        {% else %}
+                            Sin descripción disponible
+                        {% endif %}
+                    </p>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>{{ catalog.created_at|date:"d/m/Y" }}
+                        </small>
+                        {% if catalog.is_public %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-globe me-1"></i>Público
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning">
+                            <i class="fas fa-lock me-1"></i>Privado
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <div class="stats-number" style="font-size: 1.5rem;">{{ catalog.album_count }}</div>
+                            <small class="text-muted">Álbumes</small>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-number" style="font-size: 1.5rem;">{{ catalog.photo_count }}</div>
+                            <small class="text-muted">Fotos</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 d-flex gap-2">
+                    <a href="{% url 'catalogs:catalog_detail' catalog.uuid %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-eye me-2"></i>Ver Catálogo
+                    </a>
+                    <button class="btn btn-outline-success w-100 btn-share-catalog" data-link="{{ request.scheme }}://{{ request.get_host }}{% url 'catalogs:catalog_detail' catalog.uuid %}">
+                        <i class="fas fa-share-alt me-2"></i>Compartir
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No tienes catálogos aún</h4>
+        <p class="text-muted">Crea tu primer catálogo para empezar a organizar tus fotos</p>
+        <a href="{% url 'catalogs:catalog_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Crear Mi Primer Catálogo
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Quick Actions -->
+{% if user_catalogs %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold text-center mb-5">
+                <i class="fas fa-bolt me-2"></i>Acciones Rápidas
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4">
+                <i class="fas fa-plus-circle fa-3x text-primary mb-3"></i>
+                <h5 class="fw-bold">Crear Catálogo</h5>
+                <p class="text-muted">Crea un nuevo catálogo para organizar tus fotos</p>
+                <a href="{% url 'catalogs:catalog_create' %}" class="btn btn-outline-primary">
+                    Crear Catálogo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.btn-share-catalog').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const link = this.getAttribute('data-link');
+        navigator.clipboard.writeText(link).then(() => {
+            this.innerHTML = '<i class="fas fa-check me-2"></i>¡Enlace copiado!';
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-share-alt me-2"></i>Compartir';
+            }, 2000);
+        });
+    });
+});
+</script>
+{% endblock %} 

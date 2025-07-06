@@ -41,7 +41,8 @@ class Photo(models.Model):
     id = models.BigAutoField(primary_key=True)
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='photos')
     title = models.CharField(max_length=255)
-    image_url = models.URLField(max_length=500)
+    image_url = models.URLField(max_length=500, blank=True)
+    image = models.ImageField(upload_to='photos/', blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

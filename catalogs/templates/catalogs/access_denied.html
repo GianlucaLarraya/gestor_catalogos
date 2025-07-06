@@ -1,0 +1,53 @@
+{% extends 'catalogs/base.html' %}
+
+{% block title %}Acceso Denegado - Cataly{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center py-5">
+                <i class="fas fa-lock fa-4x text-warning mb-4"></i>
+                <h1 class="fw-bold mb-4">Acceso Denegado</h1>
+                <p class="lead text-muted mb-4">
+                    No tienes permisos para acceder a este catálogo. 
+                    Este catálogo es privado y solo su propietario puede verlo.
+                </p>
+                
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-search fa-2x text-primary mb-3"></i>
+                                <h5 class="fw-bold">Explorar Catálogos Públicos</h5>
+                                <p class="text-muted">Descubre catálogos que otros usuarios han compartido</p>
+                                <a href="{% url 'catalogs:home' %}" class="btn btn-primary">
+                                    <i class="fas fa-home me-2"></i>Ver Catálogos Públicos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-user fa-2x text-primary mb-3"></i>
+                                <h5 class="fw-bold">Mis Catálogos</h5>
+                                <p class="text-muted">Accede a tus propios catálogos y álbumes</p>
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'catalogs:my_catalogs' %}" class="btn btn-primary">
+                                    <i class="fas fa-user me-2"></i>Mis Catálogos
+                                </a>
+                                {% else %}
+                                <a href="{% url 'admin:login' %}" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

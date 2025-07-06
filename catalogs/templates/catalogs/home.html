@@ -1,0 +1,134 @@
+{% extends 'catalogs/base.html' %}
+
+{% block title %}Inicio - Cataly{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="fas fa-images me-3"></i>Bienvenido a Cataly
+        </h1>
+        <p class="lead mb-4">Descubre y comparte catálogos digitales increíbles</p>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-number">{{ total_catalogs }}</div>
+                    <p class="text-muted mb-0">Catálogos Públicos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Section -->
+<div class="search-box">
+    <div class="container">
+        <form method="GET" action="{% url 'catalogs:search' %}" class="row g-3">
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="q" placeholder="Buscar catálogos..." value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-2"></i>Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Catalogs Section -->
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">
+                <i class="fas fa-book-open me-2"></i>Catálogos Públicos
+            </h2>
+            <p class="text-muted">Explora los catálogos que otros usuarios han compartido</p>
+        </div>
+    </div>
+
+    {% if public_catalogs %}
+    <div class="row">
+        {% for catalog in public_catalogs %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ catalog.title }}</h5>
+                    <p class="card-text text-muted">
+                        {% if catalog.description %}
+                            {{ catalog.description|truncatewords:20 }}
+                        {% else %}
+                            Sin descripción disponible
+                        {% endif %}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>{{ catalog.owner.username }}
+                        </small>
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>{{ catalog.created_at|date:"d/m/Y" }}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{% url 'catalogs:catalog_detail' catalog.uuid %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-eye me-2"></i>Ver Catálogo
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No hay catálogos públicos disponibles</h4>
+        <p class="text-muted">Sé el primero en crear y compartir un catálogo</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'admin:catalogs_catalog_add' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Crear Catálogo
+        </a>
+        {% else %}
+        <a href="{% url 'admin:login' %}" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión para Crear
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Features Section -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold text-center mb-5">
+                <i class="fas fa-star me-2"></i>Características de Cataly
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4">
+                <i class="fas fa-share-alt fa-3x text-primary mb-3"></i>
+                <h5 class="fw-bold">Compartir</h5>
+                <p class="text-muted">Comparte tus catálogos con el mundo o manténlos privados</p>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4">
+                <i class="fas fa-images fa-3x text-primary mb-3"></i>
+                <h5 class="fw-bold">Organizar</h5>
+                <p class="text-muted">Organiza tus fotos en álbumes dentro de catálogos</p>
+            </div>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <div class="p-4">
+                <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                <h5 class="fw-bold">Descubrir</h5>
+                <p class="text-muted">Explora catálogos públicos de otros usuarios</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

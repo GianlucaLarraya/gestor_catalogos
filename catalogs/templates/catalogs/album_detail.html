@@ -1,0 +1,113 @@
+{% extends 'catalogs/base.html' %}
+
+{% block title %}{{ album.title }} - {{ catalog.title }} - Cataly{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'catalogs:home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalogs:catalog_detail' catalog.uuid %}">{{ catalog.title }}</a></li>
+            <li class="breadcrumb-item active">{{ album.title }}</li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Album Header -->
+<div class="container">
+    <div class="row mb-4">
+        <div class="col d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="fw-bold mb-3">
+                    <i class="fas fa-folder me-2"></i>{{ album.title }}
+                </h1>
+                <p class="lead text-muted">Álbum de {{ catalog.title }}</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <span class="badge bg-primary">
+                        <i class="fas fa-images me-1"></i>{{ total_photos }} fotos
+                    </span>
+                    <span class="badge bg-secondary">
+                        <i class="fas fa-calendar me-1"></i>{{ album.created_at|date:"d/m/Y" }}
+                    </span>
+                    <span class="badge bg-info">
+                        <i class="fas fa-user me-1"></i>{{ catalog.owner.username }}
+                    </span>
+                </div>
+            </div>
+            {% if user == catalog.owner %}
+            <a href="{% url 'catalogs:photo_create' catalog.uuid album.id %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Subir Foto
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Photos Section -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold">
+                <i class="fas fa-images me-2"></i>Fotos
+            </h2>
+            <p class="text-muted">Explora todas las fotos de este álbum</p>
+        </div>
+    </div>
+
+    {% if photos %}
+    <div class="photo-grid">
+        {% for photo in photos %}
+        <div class="photo-item">
+            <a href="{% url 'catalogs:photo_detail' catalog.uuid album.id photo.id %}">
+                {% if photo.image %}
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="img-fluid">
+                {% elif photo.image_url %}
+                    <img src="{{ photo.image_url }}" alt="{{ photo.title }}" class="img-fluid">
+                {% endif %}
+            </a>
+            <div class="p-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="fw-bold mb-1">{{ photo.title }}</h6>
+                    <small class="text-muted">
+                        <i class="fas fa-calendar me-1"></i>{{ photo.uploaded_at|date:"d/m/Y" }}
+                    </small>
+                </div>
+                {% if user == catalog.owner %}
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'catalogs:photo_update' catalog.uuid album.id photo.id %}"><i class="fas fa-edit me-2"></i>Editar</a></li>
+                        <li><a class="dropdown-item" href="{% url 'catalogs:photo_delete' catalog.uuid album.id photo.id %}"><i class="fas fa-trash me-2"></i>Eliminar</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-images fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No hay fotos en este álbum</h4>
+        <p class="text-muted">Este álbum aún no tiene fotos</p>
+        {% if user == catalog.owner %}
+        <a href="{% url 'catalogs:photo_create' catalog.uuid album.id %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Agregar Foto
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Navigation -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col">
+            <a href="{% url 'catalogs:catalog_detail' catalog.uuid %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Volver al Catálogo
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 
