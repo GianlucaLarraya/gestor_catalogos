@@ -1,5 +1,20 @@
 # Cataly - Sistema de Gestión de Catálogos Digitales
 
+## 🔑 Permisos y Roles de Usuario
+
+| Rol/Tipo de usuario      | Permisos principales                                                                 |
+|-------------------------|------------------------------------------------------------------------------------|
+| **Usuario anónimo**     | Puede ver catálogos públicos y buscar catálogos públicos.                            |
+| **Usuario autenticado** | Puede ver catálogos públicos, buscar catálogos públicos y gestionar sus propios catálogos, álbumes y fotos. No puede ver catálogos privados de otros usuarios. |
+| **Propietario**         | Acceso completo a sus propios catálogos, álbumes y fotos (crear, editar, eliminar, ver privados). |
+| **Superusuario**        | Acceso administrativo completo a todo el contenido y funcionalidades del sistema.    |
+
+- Los catálogos privados solo pueden ser vistos y gestionados por su propietario o por el superusuario.
+- Las acciones de creación, edición y eliminación de catálogos, álbumes y fotos requieren autenticación.
+- El acceso a vistas protegidas se controla mediante decoradores como `@login_required` y verificaciones de propiedad en las vistas.
+
+**Cataly** es una aplicación web desarrollada en Django que permite a los usuarios crear, organizar y compartir catálogos digitales de fotografías. El sistema implementa un modelo de datos jerárquico (Catálogo → Álbum → Foto) con funcionalidades avanzadas de gestión de contenido y control de acceso.
+
 ## 📋 Descripción del Proyecto
 
 **Cataly** es una aplicación web desarrollada en Django que permite a los usuarios crear, organizar y compartir catálogos digitales de fotografías. El sistema implementa un modelo de datos jerárquico (Catálogo → Álbum → Foto) con funcionalidades avanzadas de gestión de contenido y control de acceso.
@@ -53,7 +68,7 @@
 
 1. **Clonar el repositorio**:
    ```bash
-   git clone <tu-repositorio>
+   git clone https://github.com/GianlucaLarraya/gestor_catalogos.git
    cd proyecto_facultad
    ```
 
